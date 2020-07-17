@@ -1,0 +1,15 @@
+.stylishedSpan{
+  margin: 50px;
+}
+.board{
+  border: 2px solid lightslategray;
+  border-radius: 5px;
+}
+.divSpans{
+  display: flexbox;
+  flex-direction: row;
+  padding: 10px;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
