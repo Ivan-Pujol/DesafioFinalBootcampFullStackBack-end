@@ -1,32 +1,71 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import css from './app.module.css';
+import { PERIODS } from './helpers/periods'
+import M from 'materialize-css';
 
 export default function App() {
-  const transact = async () => {
-    await JSON.parse(transact);
+  const [transactions, setTransactions] = React.useState([]);
+  const [currentPeriod, setCurrentPeriod] = React.useState(PERIODS[0]);
+  React.useEffect(() => {
+    const fetchTransactions = async () => {
+      const url = `https://backend-desafiofinal.herokuapp.com/api/transaction/gettransactions/${currentPeriod}`;
+      const resource = await fetch(url);
+      const json = await resource.json();
+      setTransactions(json.transaction);
+      //console.log(transactions);
+    }
+    fetchTransactions();
+
+  }, [currentPeriod]);
+
+  React.useEffect(() => {
+    M.AutoInit();
+  }, [])
+  function getIncoming() {
+    return transactions.filter((transaction) => transaction.type === "+").reduce((acc, cur) => acc + cur.value, 0);
   }
-  const objTransact = async () => {
-    await JSON.parse(transact);
+  function getExpenses() {
+    return transactions.filter((transaction) => transaction.type === "-").reduce((acc, cur) => acc + cur.value, 0);
+  }
+  function getBalance() {
+    const incoming = getIncoming();
+    const expenses = getExpenses();
+    return incoming - expenses;
   }
 
-  //const newObject = JSON.parse(objectTransaction);
-  console.log(objTransact);
+  const handleSelectChange = (event) => {
+    //console.log('onhandlechange event')
+    setCurrentPeriod(event.target.value);
+  };
 
   return (<div className='container'>
     <div className={css.board}>
-      <h1 className='center'>Desafio Final do Bootcamp Full Stack</h1>
+      <div id='.h1Div'>
+        <h1 className='center'>Desafio Final do Bootcamp Full Stack</h1>
+      </div>
       <form action="">
-        <h2 className='center'>Controle Financeiro Pessoal</h2>
         <hr className='doted' />
-        <select className='browser-default' style={styles.centralize}>
-          <option>teste</option>
-          <option>gg</option>
-        </select>
-        <div className={css.divSpans} id='.FourElements'>
-          <span className={css.stylishedSpan}>lançamentos:</span>
-          <span className={css.stylishedSpan}>Receitas:</span>
-          <span className={css.stylishedSpan}>Despesas:</span>
-          <span className={css.stylishedSpan}>Saldo:</span>
+        <div id='.h2Div'>
+          <h2 className='center'>Controle Financeiro Pessoal</h2>
+        </div>
+        <hr className='doted' />
+        <div id='.selectDiv'>
+          <select onChange={handleSelectChange}>
+            {PERIODS.map((period) => {
+              return <option value={period} key={period}>{period}</option>
+            })}
+          </select>
+        </div>
+        <div className={css.divSpans} id='.Statistics'>
+          <span className={css.stylishedSpan}>lançamentos: {transactions.length}</span>
+          <span className={css.stylishedSpan}>Receitas: {getIncoming()}</span>
+          <span className={css.stylishedSpan}>Despesas: {getExpenses()}</span>
+          <span className={css.stylishedSpan}>Saldo: {getBalance()}</span>
+        </div>
+        <div id='.transactionsList'>
+          {transactions.map((transaction) => {
+            return <p key={transaction._id}>descrição:  {transaction.description}  valor:   {transaction.value}   data:   {transaction.yearMonthDay} </p>
+          })}
         </div>
       </form>
     </div>

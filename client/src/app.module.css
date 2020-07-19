@@ -13,3 +13,9 @@
   text-align: center;
   align-items: center;
 }
+.selectDiv{
+  display: flexbox;
+  flex-direction: row;
+  size: 250px;
+  color: aquamarine;
+}
