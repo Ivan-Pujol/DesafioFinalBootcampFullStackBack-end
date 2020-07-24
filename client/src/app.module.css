@@ -19,3 +19,9 @@
   size: 250px;
   color: aquamarine;
 }
+.buttonAndFilter{
+  display: flex;
+  flex-direction: row;
+  margin-left: 10px;
+  margin-right: 10px;
+}
