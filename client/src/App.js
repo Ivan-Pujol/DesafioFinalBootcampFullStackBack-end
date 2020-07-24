@@ -3,6 +3,7 @@ import css from './app.module.css';
 import { PERIODS } from './helpers/periods'
 import M from 'materialize-css';
 let promiseData = [];
+let counter = 1;
 
 
 export default function App() {
@@ -13,7 +14,6 @@ export default function App() {
     const YM = curYear + "-" + curMonth;
     //console.log(monthTest);
     const index = PERIODS.indexOf(YM);
-    console.log(PERIODS[index]);
     return index;
   }
   const [Transactions, setTransactions] = React.useState([]);
@@ -38,6 +38,7 @@ export default function App() {
       return transaction.description.toLowerCase().includes(transactionFilter);
     });
     setTransactions(filteredTransaction);
+    counter = 1;
   }, [currentPeriod, transactionFilter]);
 
 
@@ -62,6 +63,13 @@ export default function App() {
   const handleTyping = (event) => {
     const filter = event.target.value.toLowerCase();
     setTransactionFilter(filter);
+  }
+
+  function getColorRow(transaction) {
+    let bgColor = "pink";
+    if (transaction.type === '-') {
+      return bgColor;
+    } else return bgColor = "aquamarine"
   }
 
   return (<div className='container'>
@@ -93,7 +101,7 @@ export default function App() {
         <div className='container'>
           <div className={css.buttonAndFilter} id='.buttonAndFilter'>
             <button style={styles.button}>Nova Transação</button>
-            <input type="text" name="inputFilter" id=".filterTransactions" style={styles.inputT} onChange={handleTyping} />
+            <input type="text" name="inputFilter" id=".filterTransactions" style={styles.inputT} onChange={handleTyping} placeholder="FILTRE AQUI AS DESPESAS OU ENTRADAS:" />
           </div>
         </div>
         <hr className='doted' />
@@ -101,6 +109,7 @@ export default function App() {
           <table className="striped" style={{ border: "2px solid" }}>
             <thead>
               <tr>
+                <th>Item</th>
                 <th>Description</th>
                 <th>Value</th>
                 <th>yearMonthDay</th>
@@ -108,9 +117,10 @@ export default function App() {
               </tr>
             </thead>
             <tbody>
-              {Transactions.map((transaction) => {
-
-                return (<tr style={{ backgroundColor: "pink", border: "2px solid" }} key={transaction._id} >
+              {counter = 1, Transactions.map((transaction) => {
+                console.log("entrou map")
+                return (<tr style={{ backgroundColor: getColorRow(transaction), border: "2px solid" }} key={transaction._id} >
+                  <td>{counter++}</td>
                   <td>{transaction.description}</td>
                   <td>{transaction.value}</td>
                   <td>{transaction.yearMonthDay}</td>
@@ -122,7 +132,6 @@ export default function App() {
 
             </tfoot>
           </table>
-          {/* //<p key={transaction._id}>descrição:  {transaction.description}  valor:   {transaction.value}   data:   {transaction.yearMonthDay} </p> */}
         </div>
       </form>
     </div>
