@@ -47,14 +47,16 @@ export default function App() {
 
   useEffect(() => {
     const fetchSelectedTransaction = async () => {
-      const url = `https://backend-desafiofinal.herokuapp.com/api/transaction/id/${selectedTransaction}`;
-      //const url = `http://localhost:3001/api/transaction/id/${selectedTransaction}`;
+      //const url = `https://backend-desafiofinal.herokuapp.com/api/transaction/id/${selectedTransaction}`;
+      const url = `http://localhost:3001/api/transaction/id/${selectedTransaction}`;
       const resource = await fetch(url);
       const json = await resource.json();
       console.log(json)
-      setSelectedTransaction(json);
+      promiseData = json;
+      //setSelectedTransaction(json);
     }
     fetchSelectedTransaction();
+    setSelectedTransaction(promiseData);
     getSelectPeriods();
   }, [isModalOpen])
 
@@ -82,9 +84,7 @@ export default function App() {
     setTransactionFilter(filter);
   }
   const handleIconCompClick = (_id, typeIcon) => {
-
     if (typeIcon === "edit") {
-      console.log(_id);
       setSelectedTransaction(_id);
       setIsModalOpen(true);
     }

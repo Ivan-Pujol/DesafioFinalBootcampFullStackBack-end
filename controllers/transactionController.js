@@ -83,5 +83,15 @@ async function deleteTransaction(req, res) {
     res.status(500).send(err.message);
   }
 }
-
-module.exports = { getYearMonth, balanceYearMonth, filteredExpenses, includeTransaction, deleteTransaction, getAllTransactions };
+async function findTransactionById(req, res) {
+  try {
+    const id = Object.entries(req.params);
+    const _id = id[0][1];
+    const transaction = await transactionModel.findOne({ _id });
+    if (!transaction) res.status(500).send("No such id was found");
+    res.status(200).send(transaction);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+module.exports = { getYearMonth, balanceYearMonth, filteredExpenses, includeTransaction, deleteTransaction, getAllTransactions, findTransactionById };
