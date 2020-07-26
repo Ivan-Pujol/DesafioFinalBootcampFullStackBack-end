@@ -47,8 +47,8 @@ export default function App() {
 
   useEffect(() => {
     const fetchSelectedTransaction = async () => {
-      //const url = `https://backend-desafiofinal.herokuapp.com/api/transaction/id/${selectedTransaction}`;
-      const url = `http://localhost:3001/api/transaction/id/${selectedTransaction}`;
+      const url = `https://backend-desafiofinal.herokuapp.com/api/transaction/id/${selectedTransaction}`;
+      //const url = `http://localhost:3001/api/transaction/id/${selectedTransaction}`;
       const resource = await fetch(url);
       const json = await resource.json();
       console.log(json)
