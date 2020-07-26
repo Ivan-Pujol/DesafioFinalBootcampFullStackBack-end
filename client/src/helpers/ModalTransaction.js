@@ -1,4 +1,14 @@
 import React from 'react';
-export default function ModalTransaction() {
-  return (<div> <h2>ModalOpen</h2> </div>)
+import Modal from 'react-modal';
+Modal.setAppElement('#root');
+
+export default function ModalTransaction({ data }) {
+  return <div>
+    <Modal isOpen={true}>
+      <div>{data._id}</div>
+      <div>{data.description}</div>
+      <div>{data.value}</div>
+      <div>{data.yearMonthDay}</div>
+    </Modal>
+  </div>
 }

@@ -23,7 +23,7 @@ export default function App() {
   const [transactionFilter, setTransactionFilter] = React.useState([]);
   const [currentPeriod, setCurrentPeriod] = React.useState(PERIODS[0]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [selectedTransaction, setSelectedTransaction] = React.useState([]);
+  const [selectedTransaction, setSelectedTransaction] = React.useState('5f09c99838a95f55a0071e06');
 
   useEffect(() => {
     M.AutoInit();
@@ -47,14 +47,15 @@ export default function App() {
 
   useEffect(() => {
     const fetchSelectedTransaction = async () => {
-      const url = `https://backend-desafiofinal.herokuapp.com/api/transaction/id/${selectedTransaction}`;
+      //const url = `https://backend-desafiofinal.herokuapp.com/api/transaction/id/${selectedTransaction}`;
+      const url = `http://localhost:3001/api/transaction/id/${selectedTransaction}`;
       const resource = await fetch(url);
       const json = await resource.json();
-      promiseData = [...json.transaction];
+      console.log(json)
+      setSelectedTransaction(json);
     }
     fetchSelectedTransaction();
-    console.log(promiseData);
-    setSelectedTransaction(promiseData);
+    getSelectPeriods();
   }, [isModalOpen])
 
 
@@ -83,8 +84,47 @@ export default function App() {
   const handleIconCompClick = (_id, typeIcon) => {
 
     if (typeIcon === "edit") {
-      setSelectedTransaction()
+      console.log(_id);
+      setSelectedTransaction(_id);
       setIsModalOpen(true);
+    }
+  }
+
+  function getSelectPeriods() {
+    if (!isModalOpen) {
+      return <div id='.transactionsList'>
+        <table className="striped" style={{ border: "2px solid" }}>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Description</th>
+              <th>Value</th>
+              <th>yearMonthDay</th>
+              <th>Type</th>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            {counter = 1, Transactions.map((transaction) => {
+              return (<tr style={{ backgroundColor: getColorRow(transaction), border: "2px solid" }} key={transaction._id} >
+                <td>{counter++}</td>
+                <td>{transaction.description}</td>
+                <td>{transaction.value}</td>
+                <td>{transaction.yearMonthDay}</td>
+                <td>{transaction.type}</td>
+                <td><Icons id={transaction._id} typeIcon="edit" onIconCompClick={handleIconCompClick} /></td>
+                <td><Icons id={transaction._id} typeIcon="delete" onIconCompClick={handleIconCompClick} /></td>
+              </tr>);
+            })}
+          </tbody>
+          <tfoot>
+
+          </tfoot>
+        </table>
+      </div>
+    } else {
+      return <div></div>;
     }
   }
 
@@ -128,7 +168,8 @@ export default function App() {
           </div>
         </div>
         <hr className='doted' />
-        <div id='.transactionsList'>
+        {getSelectPeriods()}
+        {/* <div id='.transactionsList'>
           <table className="striped" style={{ border: "2px solid" }}>
             <thead>
               <tr>
@@ -158,10 +199,10 @@ export default function App() {
 
             </tfoot>
           </table>
-        </div>
+        </div> */}
       </form>
     </div>
-    {isModalOpen && <ModalTransaction />}
+    {isModalOpen && <ModalTransaction data={selectedTransaction} />}
   </div>);
 }
 const styles = {
