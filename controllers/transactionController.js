@@ -24,7 +24,7 @@ async function getYearMonth(req, res) {
     yearMonth = text[0];
     const transaction = await transactionModel.find({ yearMonth });
     if (!transaction) res.status(400).send("No transactions were found!");
-    res.send({ "Found: ": + transaction.length, transaction });
+    res.send(transaction);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -88,7 +88,7 @@ async function findTransactionById(req, res) {
     const id = Object.entries(req.params);
     const _id = id[0][1];
     const transaction = await transactionModel.findOne({ _id });
-    if (!transaction) res.status(500).send("No such id was found");
+    if (!transaction) res.status(500).send({});
     res.status(200).send(transaction);
   } catch (err) {
     res.status(500).send(err.message);
