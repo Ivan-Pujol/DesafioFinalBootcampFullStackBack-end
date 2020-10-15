@@ -7,8 +7,8 @@ import TransactionsTable from './helpers/TransactionsTable';
 
 let promiseData = [];
 let lastPeriod = [];
-let transactionSelected = '';
-const APP_VERSION = 'v0.59';
+let transactionSelected = [];
+const APP_VERSION = 'v0.65';
 
 function getYearAndMonth() {
   const curYear = new Date().getFullYear();
@@ -29,7 +29,7 @@ function sortTransactions(transactions) {
 export default function App() {
   const [currentTransactions, setCurrentTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [selectedTransaction, setSelectedTransaction] = useState([]);
   const [allPeriods, setAllPeriods] = useState([]);
   const [currentPeriod, setCurrentPeriod] = useState(null);
   const [filterText, setFilterText] = useState('');
@@ -101,44 +101,57 @@ export default function App() {
     const expenses = getExpenses();
     return incoming - expenses;
   }
+  const handleEditIconClick = (event) => {
+    setIsModalOpen(true);
+    console.log(event);
+  }
+  const handleRemoveIconClick = (event) => {
+    console.log("Você removeu: ", event);
+  }
+  const handleSetModal = (event) => {
+    console.log(event);
+    setIsModalOpen(event);
+  }
 
   return <div className='container' style={{ border: "1px solid", borderRadius: "5px", padding: "5px" }}>
-    <div className='center' style={{ border: "1px solid", borderRadius: "5px", padding: "5px" }}>
+    {!isModalOpen && <div className='center' style={{ border: "1px solid", borderRadius: "5px", padding: "5px" }}>
       <h2>Bootcamp Full Stack - Desafio Final</h2>
-    </div>
-    <div className='center' style={{ border: "1px solid", borderRadius: "5px", padding: "5px", marginTop: "5px" }}>
+    </div>}
+    {!isModalOpen && <div className='center' style={{ border: "1px solid", borderRadius: "5px", padding: "5px", marginTop: "5px" }}>
       <h3>Controle Financeiro Pessoal</h3>
-    </div>
-    <div className='row' style={{ border: "1px solid", borderRadius: "5px", padding: "5px", marginTop: "5px" }}>
-      <div className='container'>
-        <div className='col' style={{ marginLeft: "-35px" }}>
-          <div className='center'>
-            <h5 style={{ marginLeft: "25px" }}>Selecione o Periodo</h5>
-            {!isModalOpen && <PeriodSelector selectedPeriod={currentPeriod} onChangePeriod={handlePeriodChange} />}
+    </div>}
+    {!isModalOpen && <div className='row' style={{ border: "1px solid", borderRadius: "5px", padding: "5px", marginTop: "5px" }}>
+      <div className='col s12'>
+        <div className='col s6' >
+          <h5>Selecione o Periodo</h5>
+          <div style={{ marginLeft: '-18%' }}>
+            <PeriodSelector selectedPeriod={currentPeriod} onChangePeriod={handlePeriodChange} />
           </div>
         </div>
-        <div className='col' style={{ marginLeft: "55px" }}>
-          <div className='center'>
-            <h5>Selecione o Filtro</h5>
-            <input type="text" name="filtro" id=".filtering" style={{ width: "390px", marginTop: "-10px" }} onChange={handleTyping} placeholder="FILTRE AQUI AS DESPESAS OU ENTRADAS:" />
-          </div>
+        <div className='col s6'>
+          <h5>Selecione o Filtro</h5>
+          <input type="text" name="filtro" id=".filtering" onChange={handleTyping} placeholder="FILTRE AQUI AS DESPESAS OU ENTRADAS:" />
         </div>
       </div>
-    </div>
-    <div style={{ borderRadius: "5px", border: "1px solid", marginTop: "-15px" }}>
+    </div>}
+
+    {!isModalOpen && <div style={{ borderRadius: "5px", border: "1px solid", marginTop: "-15px" }}>
       <div className={css.divSpans} id='.Statistics'>
         <span className={css.stylishedSpan}><strong>lançamentos: {currentTransactions.length}</strong> </span>
         <span className={css.stylishedSpan}><strong>Receitas: {getIncoming()}</strong></span>
         <span className={css.stylishedSpan}><strong>Despesas: {getExpenses()}</strong></span>
         <span className={css.stylishedSpan}><strong>Saldo: {getBalance()}</strong></span>
+        {/* <button className='waves-effect waves-light btn' onClick={handleDespesaClick}>Nova despesa</button>} */}
       </div>
-    </div>
-    {/* <hr className='doted' /> */}
-    <div style={{ marginTop: "5px" }}>
-      {!isModalOpen && <TransactionsTable currentTransactions={currentTransactions} />}
-    </div>
+    </div>}
 
-  </div>
+    {!isModalOpen && <div style={{ marginTop: "5px" }}>
+      <TransactionsTable currentTransactions={currentTransactions} onEditIconClick={handleEditIconClick} onRemoveIconClick={handleRemoveIconClick} />
+    </div>}
+    {isModalOpen && <div>
+      <ModalTransaction modalState={isModalOpen} setModal={handleSetModal} />
+    </div>}
+  </div >
 }
 
 const styles = {

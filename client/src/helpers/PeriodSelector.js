@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { PERIODS } from './periods';
 import M from 'materialize-css';
+import css from '../app.module.css'
 
 export default function periodSelector({ selectedPeriod, onChangePeriod }) {
   //M.AutoInit();
   function makeSelect(currentPeriod) {
     if (currentPeriod !== []) {
       return (<div className='container' id='.selectDiv'>
-        <select onChange={handleSelectChange} style={styles.select} className="browser-default">
+        <select onChange={handleSelectChange} className="browser-default" >
           {PERIODS.map((period) => {
             if (period === selectedPeriod) {
               return <option value={period} key={period} selected>{period}</option>
@@ -27,7 +28,8 @@ export default function periodSelector({ selectedPeriod, onChangePeriod }) {
 }
 const styles = {
   select: {
-    width: "300px",
+    minWidth: "auto",
+    maxWidth: "300px",
     height: "35px",
     marginRight: "15px",
     marginLeft: "15px",

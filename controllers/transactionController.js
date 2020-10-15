@@ -1,5 +1,7 @@
+//import routes from "../routes/routes";
 const routes = require('../routes/routes.js');
 const transactionModel = require('../models/TransactionModel');
+//import transactionModel from "../models/TransactionModel";
 
 async function getAllTransactions(req, res) {
   try {
@@ -65,6 +67,17 @@ async function includeTransaction(req, res) {
   try {
     const { description, value, category, year, month, day, yearMonth, yearMonthDay, type } = req.body;
     const transaction = await transactionModel({ description, value, category, year, month, day, yearMonth, yearMonthDay, type });
+    if (transaction != null)
+      await transaction.save();
+    res.status(200).send(transaction);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+async function editTransaction(req, res) {
+  try {
+    const { _id, description, value, category, year, month, day, yearMonth, yearMonthDay, type } = req.body;
+    const transaction = await transactionModel({ _id, description, value, category, year, month, day, yearMonth, yearMonthDay, type });
     if (transaction != null)
       await transaction.save();
     res.status(200).send(transaction);

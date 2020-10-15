@@ -25,3 +25,15 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.selectProperties{
+  min-width: 150px;
+  max-width: 300px;
+}
+.selectorPanel{
+  display: flexbox;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+}
