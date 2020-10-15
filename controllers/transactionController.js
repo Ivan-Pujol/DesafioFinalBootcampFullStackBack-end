@@ -107,4 +107,4 @@ async function findTransactionById(req, res) {
     res.status(500).send(err.message);
   }
 }
-module.exports = { getYearMonth, balanceYearMonth, filteredExpenses, includeTransaction, deleteTransaction, getAllTransactions, findTransactionById };
+module.exports = { getYearMonth, balanceYearMonth, filteredExpenses, includeTransaction, editTransaction, deleteTransaction, getAllTransactions, findTransactionById };
