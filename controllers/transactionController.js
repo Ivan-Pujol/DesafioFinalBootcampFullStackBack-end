@@ -1,7 +1,6 @@
 //import routes from "../routes/routes";
 const routes = require('../routes/routes.js');
 const transactionModel = require('../models/TransactionModel');
-//import transactionModel from "../models/TransactionModel";
 
 async function getAllTransactions(req, res) {
   try {
@@ -76,10 +75,24 @@ async function includeTransaction(req, res) {
 }
 async function editTransaction(req, res) {
   try {
-    const { _id, description, value, category, year, month, day, yearMonth, yearMonthDay, type } = req.body;
-    const transaction = await transactionModel({ _id, description, value, category, year, month, day, yearMonth, yearMonthDay, type });
-    if (transaction != null)
-      await transaction.save();
+    const { _id } = req.body;
+    // const { description, value, category, year, month, day, yearMonth, yearMonthDay, type } = req.body;
+    //para o update da transação no db foi necessário manipular as entries dos objetos pois não se saberia quantos campos seriam trocados
+    const transaction = await transactionModel.findOne({ _id });
+    if (transaction != null) {
+      for (let [key, value] of Object.entries(transaction._doc)) {//transaction._doc porque é a parte que realmente trás os objetos de interesse
+        if (key !== "_id") {
+          if (value !== req.body[key]) {
+            if (req.body[key] !== undefined) {
+              transaction[key] = req.body[key];
+            }
+          }
+        }
+      }
+      const { description, value, category, year, month, day, yearMonth, yearMonthDay, type } = transaction;
+      await transaction.updateOne({ transaction, description, value, category, year, month, day, yearMonth, yearMonthDay, type });
+    }
+    //const newTransaction = await transactionModel.findOne({ _id });
     res.status(200).send(transaction);
   } catch (err) {
     res.status(500).send(err.message);

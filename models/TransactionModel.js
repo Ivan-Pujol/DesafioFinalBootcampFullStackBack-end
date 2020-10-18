@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const transactionId = require('mongodb').ObjectID;
 
 let schema = mongoose.Schema({
   description: {
